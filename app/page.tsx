@@ -1,32 +1,29 @@
-'use client';
+import { supabase } from "@/lib/supabase/client";
+import { PageHeader } from "./components/home/PageHeader";
+import { EmptyState } from "./components/home/EmptyState";
+import { ErrorState } from "./components/home/ErrorState";
+import { PostList } from "./components/home/PostList";
 
-import { useEffect } from "react";
-
-async function createPost(title: string, code: string) {
-  const response = await fetch('/api/posts', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({ title, code })
-    });
-  await response.json();
-}
-
-export default function Home() {
-
-  useEffect(() => {
-    async function getPosts() {
-      const response = await fetch('/api/posts');
-      const data = await response.json();
-      console.log(data);
-    }
-    getPosts();
-  }, [])
-
+export default async function Home() {
+  const { data: posts, error } = await supabase
+    .from('code-posts')
+    .select('*')
+    .order('created_at', { ascending: false });
+    
+  if (error) {
+    return <ErrorState />;
+  }
+    
   return (
-    <div>
-      <button onClick={() => createPost('Ciao', 'Codice')}>POST</button>
+    <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-purple-50 to-pink-50">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <PageHeader posts={posts} />
+        {posts && posts.length > 0 ? (
+          <PostList initialPosts={posts} />
+        ) : (
+          <EmptyState />
+        )}
+      </div>
     </div>
   );
 }

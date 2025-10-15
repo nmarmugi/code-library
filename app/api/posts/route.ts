@@ -1,21 +1,8 @@
 import { supabase } from '@/lib/supabase/client';
 import { NextRequest, NextResponse } from 'next/server';
 
-export async function GET() {
-    const { data, error } = await supabase
-        .from('code-posts')
-        .select('*');
-    
-    if (error) {
-        return NextResponse.json({ error: error.message }, { status: 500 });
-    }
-    
-    return NextResponse.json(data);
-}
-
 export async function POST(request: NextRequest) {
-    const body = await request.json();
-    const { title, code } = body;
+    const { title, code } = await request.json();
 
     if (!title || !code) {
         return NextResponse.json(
@@ -34,4 +21,32 @@ export async function POST(request: NextRequest) {
     }
     
     return NextResponse.json(data, { status: 201 });
+}
+
+export async function DELETE(request: NextRequest) {
+    try {
+        const { id } = await request.json();
+
+        if (!id) {
+            return Response.json({ error: "ID mancante nel body" }, { status: 400 });
+        }
+
+        const { error } = await supabase
+            .from("code-posts")
+            .delete()
+            .eq("id", id);
+
+        if (error) {
+            console.error("Errore Supabase:", error);
+            return Response.json({ error: error.message }, { status: 500 });
+        }
+
+        return Response.json({ success: true }, { status: 200 });
+    } catch (err) {
+        console.error("Errore nella route DELETE:", err);
+        return Response.json(
+            { error: "Errore interno del server" },
+            { status: 500 }
+        );
+    }
 }
