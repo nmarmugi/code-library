@@ -10,7 +10,6 @@ export function ErrorState() {
                 </h1>
             </div>
             <div className="bg-white rounded-2xl shadow-xl p-8 max-w-md">
-                <div className="text-6xl mb-4 text-center">❌</div>
                 <h2 className="text-2xl font-bold text-gray-800 text-center mb-2">
                     Houston, abbiamo un problema! 🚀
                 </h2>
