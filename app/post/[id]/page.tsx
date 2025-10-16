@@ -1,4 +1,6 @@
 import CopyButton from "@/app/components/CopyButton";
+import { ErrorState } from "@/app/components/ErrorState";
+import EditAndPreviewPost from "@/app/components/singlePost/EditAndPreviewPost";
 import { supabase } from "@/lib/supabase/client";
 import { CodePostCardProps } from "@/types/PostCard";
 import Link from "next/link";
@@ -19,7 +21,7 @@ export default async function Post({ params }: PageProps) {
         .single<CodePostCardProps>()
 
     if (error || !post) {
-        return <div>Post non trovato!</div>;
+        return <ErrorState />;
     }
 
     return (
@@ -37,9 +39,7 @@ export default async function Post({ params }: PageProps) {
                             <CopyButton code={post.code} />
                         </div>
 
-                        <pre className="bg-gradient-to-br from-gray-900 to-gray-800 text-gray-100 p-4 rounded-xl text-sm font-mono leading-relaxed shadow-inner">
-                            <code>{post.code}</code>
-                        </pre>
+                        <EditAndPreviewPost id={post.id} code={post.code} />
 
                         <div className="mt-4 flex items-center justify-between text-sm text-gray-500">
                             <Link href={'/'} className="cursor-pointer text-indigo-600 hover:text-indigo-700 font-semibold hover:underline">

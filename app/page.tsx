@@ -1,7 +1,7 @@
 import { supabase } from "@/lib/supabase/client";
 import { PageHeader } from "./components/home/PageHeader";
 import { EmptyState } from "./components/home/EmptyState";
-import { ErrorState } from "./components/home/ErrorState";
+import { ErrorState } from "./components/ErrorState";
 import { PostList } from "./components/home/PostList";
 
 export default async function Home() {
