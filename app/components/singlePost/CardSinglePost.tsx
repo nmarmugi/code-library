@@ -15,6 +15,7 @@ interface CardSinglePost {
 
 export default function CardSinglePost({id, title, code, created_at}: CardSinglePost) {
     const [mounted, setMounted] = useState(false);
+    const [currentTitle, setCurrentTitle] = useState(title);
     
     useEffect(() => {
         setMounted(true);
@@ -27,7 +28,7 @@ export default function CardSinglePost({id, title, code, created_at}: CardSingle
             className="group bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden border border-gray-100 hover:border-indigo-200 hover:-translate-y-1 relative"
         >
             <div className="p-6">
-                <EditNamePost id={id} code={code} title={title} />
+                <EditNamePost id={id} code={code} title={currentTitle} onTitleUpdate={(newTitle) => setCurrentTitle(newTitle)} />
 
                 <EditAndPreviewPost id={id} code={code} />
 

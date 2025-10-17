@@ -1,6 +1,32 @@
 import { supabase } from '@/lib/supabase/client';
 import { NextRequest, NextResponse } from 'next/server';
 
+export async function GET() {
+    try {
+        const { data, error } = await supabase
+            .from("code-posts")
+            .select("*")
+            .order("created_at", { ascending: false });
+
+        if (error) throw error;
+
+        return NextResponse.json(data);
+    } catch (err: unknown) {
+        let message = "Errore nel recupero dei post";
+
+        if (err instanceof Error) {
+            message = err.message;
+        } else if (typeof err === "string") {
+            message = err;
+        }
+
+        return NextResponse.json(
+            { message },
+            { status: 500 }
+        );
+    }
+}
+
 export async function POST(request: NextRequest) {
     const { title, code } = await request.json();
 

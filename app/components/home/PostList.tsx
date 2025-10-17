@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import { CodePostCard } from "./CodePostCard";
 import { CodePostCardProps } from "@/types/PostCard";
 import { deletePost } from "@/utils/deletePost";
-import { useRouter } from "next/navigation";
 import { showToast } from "nextjs-toast-notify";
 import Prism from "prismjs";
 import "prismjs/themes/prism-tomorrow.css";
@@ -14,12 +13,12 @@ import Loader from "../Loader";
 
 interface PostListProps {
     initialPosts: CodePostCardProps[];
+    onPostRemoved?: (id: number) => void;
 }
 
-export function PostList({ initialPosts }: PostListProps) {
+export function PostList({ initialPosts, onPostRemoved }: PostListProps) {
     const [posts, setPosts] = useState<CodePostCardProps[]>(initialPosts);
     const [isOpenModal, setIsOpenModal] = useState(false);
-    const router = useRouter();
     const [mounted, setMounted] = useState(false);
 
     useEffect(() => {
@@ -34,6 +33,9 @@ export function PostList({ initialPosts }: PostListProps) {
         try {
             await deletePost(id);
             setPosts((prev) => prev.filter((post) => post.id !== id));
+
+            if (onPostRemoved) onPostRemoved(id);
+
             setIsOpenModal(false);
             showToast.success("Snippet eliminato con successo!", {
                 duration: 4000,
@@ -43,7 +45,6 @@ export function PostList({ initialPosts }: PostListProps) {
                 icon: '',
                 sound: true,
             });
-            router.refresh();
         } catch (err) {
             console.error("Errore durante l'eliminazione:", err);
             showToast.error("Problema nell'eliminazione dello snippet!", {

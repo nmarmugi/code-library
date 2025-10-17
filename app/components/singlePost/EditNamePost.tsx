@@ -1,6 +1,5 @@
 'use client';
 
-import { useRouter } from "next/navigation";
 import { showToast } from "nextjs-toast-notify";
 import { useState, useRef, useEffect } from "react";
 import CopyButton from "../CopyButton";
@@ -10,13 +9,13 @@ interface EditNamePost {
     title: string;
     code: string;
     id: number;
+    onTitleUpdate?: (newTitle: string) => void; 
 }
 
-export default function EditNamePost({ id, title, code }: EditNamePost) {
+export default function EditNamePost({ id, title, code, onTitleUpdate }: EditNamePost) {
     const [isEdit, setIsEdit] = useState(false);
     const [editName, setEditName] = useState(title);
     const [isSubmitting, setIsSubmitting] = useState(false);
-    const router = useRouter();
     const containerRef = useRef<HTMLDivElement>(null);
     const inputRef = useRef<HTMLInputElement>(null);
 
@@ -51,40 +50,20 @@ export default function EditNamePost({ id, title, code }: EditNamePost) {
 
     const handleUpdate = async (id: number) => {
         if (editName.trim() === '') {
-            showToast.error("Il nome deve contenere almeno un carattere!", {
-                duration: 4000,
-                progress: true,
-                position: "bottom-center",
-                transition: "slideInUp",
-                icon: '',
-                sound: true,
-            });
+            showToast.error("Il nome deve contenere almeno un carattere!");
             return;
         }
-        const now = new Date().toISOString();
         setIsSubmitting(true);
         try {
-            await updateTitlePost(id, editName, now);
+            await updateTitlePost(id, editName, new Date().toISOString());
             setIsEdit(false);
-            showToast.success("Snippet aggiornato con successo!", {
-                duration: 4000,
-                progress: true,
-                position: "bottom-center",
-                transition: "slideInUp",
-                icon: '',
-                sound: true,
-            });
-            router.refresh();
+
+            if (onTitleUpdate) onTitleUpdate(editName);
+
+            showToast.success("Snippet aggiornato con successo!");
         } catch (err) {
             console.error("Errore durante l'aggiornamento:", err);
-            showToast.error("Problema nell'aggiornamento dello snippet!", {
-                duration: 4000,
-                progress: true,
-                position: "bottom-center",
-                transition: "slideInUp",
-                icon: '',
-                sound: true,
-            });
+            showToast.error("Problema nell'aggiornamento dello snippet!");
         } finally {
             setIsSubmitting(false);
         }
@@ -155,7 +134,7 @@ export default function EditNamePost({ id, title, code }: EditNamePost) {
                         onClick={() => setIsEdit(true)}
                         className="cursor-pointer text-xl font-bold text-gray-800 group-hover:text-indigo-600 transition-colors"
                     >
-                        {title}
+                        {title.length > 17 ? `${title.slice(0, 17)}...` : title}
                     </h2>
                     <CopyButton code={code} />
                 </div>
