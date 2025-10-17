@@ -12,17 +12,23 @@ interface PostListProps {
 
 export function PostList({ initialPosts }: PostListProps) {
     const [posts, setPosts] = useState<CodePostCardProps[]>(initialPosts);
+    const [isOpenModal, setIsOpenModal] = useState(false);
     const router = useRouter();
     
     const handleDelete = async (id: number) => {
         try {
             await deletePost(id);
             setPosts((prev) => prev.filter((post) => post.id !== id));
+            setIsOpenModal(false);
             router.refresh();
         } catch (err) {
             console.error("Errore durante l'eliminazione:", err);
         }
     };
+
+    const handleOpenModal = () => {
+        setIsOpenModal(!isOpenModal);
+    }
 
     return (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -34,6 +40,9 @@ export function PostList({ initialPosts }: PostListProps) {
                     code={post.code}
                     created_at={post.created_at}
                     onDelete={handleDelete}
+                    onOpen={handleOpenModal}
+                    isOpenModal={isOpenModal}
+                    setIsOpenModal={setIsOpenModal}
                 />
             ))}
         </div>
