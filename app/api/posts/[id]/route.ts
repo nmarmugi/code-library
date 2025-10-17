@@ -18,6 +18,7 @@ export async function GET(req: Request) {
         .single();
 
         if (error) throw error;
+        
         if (!data) return NextResponse.json({ message: "Post non trovato" }, { status: 404 });
 
         return NextResponse.json(data);
