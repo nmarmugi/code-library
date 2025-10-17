@@ -8,7 +8,8 @@ export default async function Home() {
   const { data: posts, error } = await supabase
     .from('code-posts')
     .select('*')
-    .order('created_at', { ascending: false });
+    .order('created_at', { ascending: false })
+    .throwOnError();;
     
   if (error) {
     return <ErrorState />;
