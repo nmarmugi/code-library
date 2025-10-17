@@ -30,12 +30,22 @@ export function PostList({ initialPosts, onPostRemoved }: PostListProps) {
             setModalPostId(null);
 
             showToast.success("Snippet eliminato con successo!", {
-                duration: 4000, progress: true, position: "bottom-center", transition: "slideInUp"
+                duration: 4000,
+                progress: true,
+                position: "bottom-center",
+                transition: "slideInUp",
+                icon: '',
+                sound: true,
             });
         } catch (err) {
             console.error("Errore durante l'eliminazione:", err);
             showToast.error("Problema nell'eliminazione dello snippet!", {
-                duration: 4000, progress: true, position: "bottom-center", transition: "slideInUp"
+                duration: 4000,
+                progress: true,
+                position: "bottom-center",
+                transition: "slideInUp",
+                icon: '',
+                sound: true,
             });
         }
     };
