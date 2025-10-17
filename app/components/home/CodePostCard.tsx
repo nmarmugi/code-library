@@ -20,11 +20,11 @@ export function CodePostCard({ id, title, code, created_at, onDelete, onOpen, is
                 className="group bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 overflow-hidden border border-gray-100 hover:border-indigo-200 hover:-translate-y-1 relative"
             >
                 <button
-                    className="cursor-pointer absolute top-7 right-4 opacity-0 group-hover:opacity-100 transition-opacity duration-200 hover:scale-110"
+                    className="cursor-pointer absolute top-7 right-4"
                     aria-label="Elimina snippet"
                     onClick={() => onOpen()}
                 >
-                    <span className="text-xl text-gray-400 hover:text-red-500 transition-colors">
+                    <span className="text-xl text-gray-400">
                         🗑️
                     </span>
                 </button>
