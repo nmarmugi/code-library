@@ -1,32 +1,30 @@
 'use client';
 
-import { updatePost } from "@/utils/updatePost";
 import { useRouter } from "next/navigation";
 import { showToast } from "nextjs-toast-notify";
 import { useState, useRef, useEffect } from "react";
-import Prism from "prismjs";
-import "prismjs/themes/prism-tomorrow.css";
-import "prismjs/components/prism-jsx";
-import "prismjs/components/prism-typescript";
+import CopyButton from "../CopyButton";
+import { updateTitlePost } from "@/utils/updateTitlePost";
 
-interface EditAndPreviewPost {
+interface EditNamePost {
+    title: string;
     code: string;
     id: number;
 }
 
-export default function EditAndPreviewPost({ id, code }: EditAndPreviewPost) {
+export default function EditNamePost({ id, title, code }: EditNamePost) {
     const [isEdit, setIsEdit] = useState(false);
-    const [editCode, setEditCode] = useState(code);
+    const [editName, setEditName] = useState(title);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const router = useRouter();
     const containerRef = useRef<HTMLDivElement>(null);
-    const textareaRef = useRef<HTMLTextAreaElement>(null);
+    const inputRef = useRef<HTMLInputElement>(null);
 
     useEffect(() => {
         function handleClickOutside(event: MouseEvent) {
             if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
                 setIsEdit(false);
-                setEditCode(code);
+                setEditName(title);
             }
         }
 
@@ -37,36 +35,23 @@ export default function EditAndPreviewPost({ id, code }: EditAndPreviewPost) {
         }
 
         return () => document.removeEventListener("mousedown", handleClickOutside);
-    }, [isEdit, code]);
+    }, [isEdit, title]);
 
     useEffect(() => {
-        if (!isEdit) {
-            Prism.highlightAll();
-        }
-    }, [isEdit, editCode]);
-
-    useEffect(() => {
-        if (isEdit && textareaRef.current) {
-            const textarea = textareaRef.current;
-            textarea.style.height = "auto";
-            textarea.style.height = textarea.scrollHeight + "px";
-
-            const length = textarea.value.length;
-            textarea.setSelectionRange(length, length);
-            textarea.focus();
+        if (isEdit && inputRef.current) {
+            const length = inputRef.current.value.length;
+            inputRef.current.setSelectionRange(length, length);
+            inputRef.current.focus();
         }
     }, [isEdit]);
 
-    function handleChange(e: React.ChangeEvent<HTMLTextAreaElement>) {
-        const textarea = e.target;
-        setEditCode(textarea.value);
-        textarea.style.height = "auto";
-        textarea.style.height = textarea.scrollHeight + "px";
+    function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
+        setEditName(e.target.value);
     }
 
     const handleUpdate = async (id: number) => {
-        if (editCode.trim() === '') {
-            showToast.error("Il codice deve contenere almeno un carattere!", {
+        if (editName.trim() === '') {
+            showToast.error("Il nome deve contenere almeno un carattere!", {
                 duration: 4000,
                 progress: true,
                 position: "bottom-center",
@@ -79,7 +64,7 @@ export default function EditAndPreviewPost({ id, code }: EditAndPreviewPost) {
         const now = new Date().toISOString();
         setIsSubmitting(true);
         try {
-            await updatePost(id, editCode, now);
+            await updateTitlePost(id, editName, now);
             setIsEdit(false);
             showToast.success("Snippet aggiornato con successo!", {
                 duration: 4000,
@@ -108,32 +93,27 @@ export default function EditAndPreviewPost({ id, code }: EditAndPreviewPost) {
     return (
         <div ref={containerRef} className="w-full">
             {isEdit ? (
-                <>
-                    <textarea
-                        ref={textareaRef}
-                        value={editCode}
+                <div className="mb-5 w-full flex flex-col md:flex-row justify-between md:items-center gap-2">
+                    <input
+                        ref={inputRef}
+                        value={editName}
                         onChange={handleChange}
-                        className="bg-gradient-to-br from-gray-900 to-gray-800 text-gray-100 p-4 rounded-xl text-sm font-mono leading-relaxed shadow-inner w-full resize-none"
+                        className="bg-transparent text-gray-800 text-xl font-bold focus:outline-none px-0"
                     />
-
-                    <div className="flex flex-col sm:flex-row sm:justify-between gap-4 pt-4">
+                    <div className="flex gap-2">
                         <button
-                            onClick={() => {
-                                setIsEdit(false);
-                                setEditCode(code);
-                            }}
                             type="button"
+                            onClick={() => setIsEdit(false)}
+                            className="text-sm cursor-pointer px-4 py-2 text-gray-700 font-medium rounded-xl border border-gray-300 hover:bg-gray-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                             disabled={isSubmitting}
-                            className="cursor-pointer px-6 py-3 text-gray-700 font-medium rounded-xl border border-gray-300 hover:bg-gray-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                         >
                             Annulla
                         </button>
-
                         <button
-                            onClick={() => handleUpdate(id)}
                             type="button"
+                            onClick={() => handleUpdate(id)}
                             disabled={isSubmitting}
-                            className={`cursor-pointer px-8 py-3 font-semibold rounded-xl text-white transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 flex items-center justify-center gap-2 ${
+                            className={`text-sm cursor-pointer px-6 py-2 font-semibold rounded-xl text-white transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 flex items-center justify-center gap-2 ${
                                 isSubmitting
                                     ? "bg-gray-400 cursor-not-allowed"
                                     : "bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700"
@@ -168,14 +148,17 @@ export default function EditAndPreviewPost({ id, code }: EditAndPreviewPost) {
                             )}
                         </button>
                     </div>
-                </>
+                </div>
             ) : (
-                <pre
-                    onClick={() => setIsEdit(true)}
-                    className="cursor-pointer overflow-x-auto bg-[#1e1e1e] text-gray-100 p-4 rounded-xl text-sm font-mono leading-relaxed shadow-inner"
-                >
-                    <code className="language-jsx">{editCode}</code>
-                </pre>
+                <div className="flex items-center gap-2 mb-4">
+                    <h2
+                        onClick={() => setIsEdit(true)}
+                        className="cursor-pointer text-xl font-bold text-gray-800 group-hover:text-indigo-600 transition-colors"
+                    >
+                        {title}
+                    </h2>
+                    <CopyButton code={code} />
+                </div>
             )}
         </div>
     );

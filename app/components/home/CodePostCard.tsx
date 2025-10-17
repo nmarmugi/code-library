@@ -2,8 +2,18 @@ import { CodePostCardProps } from "@/types/PostCard";
 import Link from "next/link";
 import CopyButton from "../CopyButton";
 import Modal from "../Modal";
+import { useEffect } from "react";
 
-export function CodePostCard({ id, title, code, created_at, onDelete, onOpen, isOpenModal, setIsOpenModal }: CodePostCardProps) {
+export function CodePostCard({ id, title, code, created_at, onDelete, onOpen, isOpenModal, setIsOpenModal, className }: CodePostCardProps) {
+    
+    useEffect(() => {
+        import("prismjs").then((Prism) => {
+            import("prismjs/components/prism-jsx");
+            import("prismjs/components/prism-typescript");
+            Prism.highlightAll();
+        });
+    }, [code]);
+
     return (
         <>
             <article
@@ -28,7 +38,7 @@ export function CodePostCard({ id, title, code, created_at, onDelete, onOpen, is
                     </div>
 
                     <pre className="bg-gradient-to-br from-gray-900 to-gray-800 text-gray-100 p-4 rounded-xl overflow-x-auto text-sm font-mono leading-relaxed shadow-inner h-48 overflow-y-auto">
-                        <code>{code}</code>
+                        <code className={className}>{code}</code>
                     </pre>
 
                     <div className="mt-4 flex items-center justify-between text-sm text-gray-500">

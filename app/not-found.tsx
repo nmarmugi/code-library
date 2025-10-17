@@ -2,25 +2,22 @@
 
 import { useRouter } from "next/navigation";
 
-export function ErrorState() {
+export default function NotFound() {
     const router = useRouter();
-    
+
     return (
-        <div className="min-h-screen bg-gradient-to-br from-red-50 to-orange-50 flex flex-col items-center justify-center">
+        <div className="min-h-screen bg-gradient-to-br from-red-50 to-orange-50 flex flex-col items-center justify-center px-4">
             <div className="text-center mb-12">
-                <div className="inline-block mb-4">
-                    <div className="text-6xl sm:text-7xl">💻</div>
-                </div>
                 <h1 className="text-5xl sm:text-6xl font-bold bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 bg-clip-text text-transparent mb-4">
-                    Code Library
+                    Pagina Non Trovata
                 </h1>
             </div>
-            <div className="bg-white rounded-2xl shadow-xl p-8 max-w-[90%] md:max-w-md flex flex-col items-center gap-2">
-                <h2 className="text-2xl font-bold text-gray-800 text-center mb-2">
-                    Houston, abbiamo un problema! 🚀
+            <div className="bg-white rounded-2xl shadow-xl p-8 max-w-md text-center">
+                <h2 className="text-2xl font-bold text-gray-800 mb-2">
+                    Houston, non c'è nulla qui! 🚀
                 </h2>
-                <p className="text-gray-600 text-center">
-                    I nostri snippet si sono nascosti. Riprova tra un attimo!
+                <p className="text-gray-600 mb-6">
+                    La pagina che stai cercando non esiste o è stata rimossa.
                 </p>
                 <button
                     onClick={() => router.push("/")}

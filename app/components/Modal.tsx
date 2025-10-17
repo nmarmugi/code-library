@@ -35,14 +35,14 @@ export default function Modal({ setIsOpenModal, onDelete, id }: Modal) {
                     <button
                         onClick={() => setIsOpenModal(false)}
                         disabled={isSubmitting}
-                        className="w-full sm:w-auto cursor-pointer px-6 py-3 text-gray-700 font-medium rounded-xl border border-gray-300 hover:bg-gray-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="text-xs w-full sm:w-auto cursor-pointer px-6 py-3 text-gray-700 font-medium rounded-xl border border-gray-300 hover:bg-gray-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                         ← Annulla
                     </button>
                     <button
                         onClick={handleConfirm}
                         disabled={isSubmitting}
-                        className={`w-full sm:w-auto cursor-pointer px-8 py-3 font-semibold rounded-xl text-white transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 flex items-center justify-center gap-2 ${
+                        className={`text-sm w-full sm:w-auto cursor-pointer px-8 py-3 font-semibold rounded-xl text-white transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 flex items-center justify-center gap-2 ${
                             isSubmitting
                                 ? "bg-gray-400 cursor-not-allowed"
                                 : "bg-gradient-to-r from-red-600 to-pink-600 hover:from-red-700 hover:to-pink-700"

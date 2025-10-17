@@ -7,6 +7,7 @@ import { FormHeader } from "../components/form/FormHeader";
 import { FormError } from "../components/form/FormError";
 import { FormField } from "../components/form/FormField";
 import { FormActions } from "../components/form/FormActions";
+import { showToast } from "nextjs-toast-notify";
 
 export default function NewSnippetForm() {
     const [title, setTitle] = useState("");
@@ -18,7 +19,15 @@ export default function NewSnippetForm() {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         if (!title.trim() || !code.trim()) {
-            setError("Titolo e codice sono obbligatori.");
+            setError("Titolo e codice sono obbligatori!");
+            showToast.error("Titolo e codice sono obbligatori!", {
+                duration: 4000,
+                progress: true,
+                position: "bottom-center",
+                transition: "slideInUp",
+                icon: '',
+                sound: true,
+            });
             return;
         }
 
@@ -28,11 +37,27 @@ export default function NewSnippetForm() {
         try {
             await createPost(title, code);
             router.push("/");
+            showToast.success("Snippet creato con successo!", {
+                duration: 4000,
+                progress: true,
+                position: "bottom-center",
+                transition: "slideInUp",
+                icon: '',
+                sound: true,
+            });
         } catch (err) {
             const errorMessage = err instanceof Error 
                 ? err.message 
                 : "Qualcosa è andato storto.";
             setError(errorMessage);
+            showToast.error("Problema nella creazione dello snippet!", {
+                duration: 4000,
+                progress: true,
+                position: "bottom-center",
+                transition: "slideInUp",
+                icon: '',
+                sound: true,
+            });
         } finally {
             setIsSubmitting(false);
         }

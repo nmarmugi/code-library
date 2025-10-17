@@ -9,4 +9,5 @@ export interface CodePostCardProps {
     onOpen: () => void;
     isOpenModal: boolean;
     setIsOpenModal: React.Dispatch<SetStateAction<boolean>>;
+    className: string;
 }
