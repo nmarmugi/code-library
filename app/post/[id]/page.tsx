@@ -17,6 +17,7 @@ export default async function Post({ params }: PageProps) {
         .select('*')
         .eq('id', id)
         .single<CodePostCardProps>()
+        .throwOnError();
 
     if (error || !post) {
         return <ErrorState />;

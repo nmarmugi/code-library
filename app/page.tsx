@@ -9,7 +9,7 @@ export default async function Home() {
     .from('code-posts')
     .select('*')
     .order('created_at', { ascending: false })
-    .throwOnError();;
+    .throwOnError();
     
   if (error) {
     return <ErrorState />;
