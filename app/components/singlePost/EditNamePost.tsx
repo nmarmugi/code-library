@@ -50,7 +50,14 @@ export default function EditNamePost({ id, title, code, onTitleUpdate }: EditNam
 
     const handleUpdate = async (id: number) => {
         if (editName.trim() === '') {
-            showToast.error("Il nome deve contenere almeno un carattere!");
+            showToast.error("Il nome deve contenere almeno un carattere!", {
+                duration: 4000,
+                progress: true,
+                position: "bottom-center",
+                transition: "slideInUp",
+                icon: '',
+                sound: true,
+            });
             return;
         }
         setIsSubmitting(true);
@@ -60,10 +67,24 @@ export default function EditNamePost({ id, title, code, onTitleUpdate }: EditNam
 
             if (onTitleUpdate) onTitleUpdate(editName);
 
-            showToast.success("Snippet aggiornato con successo!");
+            showToast.success("Snippet aggiornato con successo!", {
+                duration: 4000,
+                progress: true,
+                position: "bottom-center",
+                transition: "slideInUp",
+                icon: '',
+                sound: true,
+    });
         } catch (err) {
             console.error("Errore durante l'aggiornamento:", err);
-            showToast.error("Problema nell'aggiornamento dello snippet!");
+            showToast.error("Problema nell'aggiornamento dello snippet!", {
+                duration: 4000,
+                progress: true,
+                position: "bottom-center",
+                transition: "slideInUp",
+                icon: '',
+                sound: true,
+            });
         } finally {
             setIsSubmitting(false);
         }
